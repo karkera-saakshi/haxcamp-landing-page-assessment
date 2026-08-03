@@ -26,8 +26,11 @@ export default function ConsultationPage() {
     details: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  
   let handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     axios.post("http://localhost:9000/create", formData)
       .then(() => {
         setSubmitted(true);
@@ -108,6 +111,7 @@ export default function ConsultationPage() {
                     type="date"
                     required
                     value={formData.date}
+                    min={new Date().toISOString().split("T")[0]}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                     style={{ width: "100%", padding: 12, background: "#14110D", border: `1px solid ${colors.lineDark}`, borderRadius: 4, color: "#FFF", fontSize: 14, outline: "none" }}
                   />
@@ -126,6 +130,7 @@ export default function ConsultationPage() {
               </div>
 
               <button
+                disabled={loading}
                 type="submit"
                 style={{ background: colors.amber, color: colors.ink, border: "none", padding: "14px 24px", borderRadius: 4, fontSize: 15, fontWeight: 600, cursor: "pointer", marginTop: 10 }}
               >
