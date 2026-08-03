@@ -1,4 +1,5 @@
 const { MongoClient, ObjectId } = require("mongodb");
+const sendBookingEmails = require("../utils/sendEmail");
 
 let url = process.env.MONGO_URI;
 let getCollection = () => {
@@ -12,14 +13,15 @@ let getCollection = () => {
 let create = (obj, res) =>
 {
     let client = new MongoClient(url);
+    
     const now = new Date();
-    obj.created_at = now;
-    obj.updated_at = now;
     client.connect();
     let db = client.db("eventbooking");
     let coll = db.collection("booking");
     coll.insertOne(obj)
-    .then((result)=> res.send(result))
+    .then((result)=> 
+        {sendBookingEmails(obj);
+        res.send(result)})
     .catch((err)=>res.status(500).send(err))
     .finally (()=>client.close())
 }

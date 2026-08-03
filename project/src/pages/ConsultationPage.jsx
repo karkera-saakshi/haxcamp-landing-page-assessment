@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import axios from "axios";
 
 const colors = {
   ink: "#14110D",
@@ -25,10 +26,16 @@ export default function ConsultationPage() {
     details: "",
   });
 
-  const handleSubmit = (e) => {
+  let handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
-  };
+    axios.post("http://localhost:9000/create", formData)
+      .then(() => {
+        setSubmitted(true);
+      })
+      .catch(() => {
+        alert("Failed to submit ticket. Please try again.");
+      });
+    };
 
   return (
     <div style={{ fontFamily: fontBody, background: colors.ink, color: "#D9D3C6", minHeight: "100vh", padding: "40px 6vw" }}>
